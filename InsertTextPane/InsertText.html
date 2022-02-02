@@ -1,0 +1,73 @@
+<!-- Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See LICENSE.txt in the project root for license information. -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+  <title></title>
+  <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js" type="text/javascript"></script>
+  
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>
+  
+  <link rel="stylesheet" href="https://appsforoffice.microsoft.com/fabric/1.0/fabric.min.css" />
+  <link rel="stylesheet" href="https://appsforoffice.microsoft.com/fabric/1.0/fabric.components.min.css" />
+  
+  <script src="../Assets/Scripts/jquery.fabric.js" type="text/javascript"></script>
+  
+  <link href="../App.css" rel="stylesheet" type="text/css" />
+  <script src="../App.js" type="text/javascript"></script>
+  
+  <script src="InsertText.js" type="text/javascript"></script>
+</head>
+<body>
+  <div id="content-header">
+    <div class="padding">
+        <h1 class="ms-font-xl ms-fontWeight-light ms-fontColor-white">
+            Marking Emails CUI/PII
+        </h1>
+    </div>
+  </div>
+  <div id="content-main" class="ms-Grid">
+    <div class="ms-Grid-row">
+        <div class="ms-Grid-col ms-u-sm12">
+            <div class="ms-TextField">
+                <dl>
+                    <dt><b>Controlled by:</b></dt>
+                    <dd>- <i>the name of the DoD Component</i></dd>
+                    <dt><b>Controlled by:</b></dt>
+                    <dd>- <i>identification of the office creating the document</i></dd>
+                    <dt><b>CUI Category:</b></dt>
+                    <dd>- <i><a href="https://www.dodcui.mil/Home/DoD-CUI-Registry/">https://www.dodcui.mil/</a></i></dd>
+                    <dt><b>Distribution/Dissemination Controls:</b></dt>
+                    <dd>- <i>applicable distribution statement or limited dissemination control (LDC)</i></dd>
+                    <dt><b>POC:</b></dt>
+                    <dd>- <i>name and phone number or email of POC</i></dd>
+                </dl>
+
+                <dl>
+                    <dt><b>Examples of stand-alone PII include:</b></dt>
+                    <dd>- <i>Social Security Numbers (SSN)</i></dd>
+                    <dd>- <i>driver's license or state identification number</i></dd>
+                    <dd>- <i>Alien Registration Numbers</i></dd>
+                    <dd>- <i>financial account number</i></dd>
+                    <dd>- <i>biometric identifiers such as fingerprint, voiceprint, or iris scan</i></dd>
+                    <dt><b>Information that contain an individual's name or other unique identifier plus one or more of the following elements:</b></dt>
+                    <dd>- <i>Truncated SSN (such as last four digits)</i></dd>
+                    <dd>- <i>Date of birth (month, day, and year)</i></dd>
+                    <dd>- <i>Citizenship or immigration status</i></dd>
+                    <dd>- <i>Ethnic or religious affiliation</i></dd>
+                    <dd>- <i>Sexual orientation</i></dd>
+                    <dd>- <i>Criminal history</i></dd>
+                    <dd>- <i>Medical information</i></dd>
+                    <dd>- <i>System authentication information such as mother's maiden name, account passwords, or personal identification number</i></dd>
+                    <dd>- <i>Medical information</i></dd>
+                </dl>
+
+                <p>c. Other PII may be "sensitive" depending on its context, such in as a list of employees and their performance rating(s) or an unlisted home address or phone number.  In contrast, a business card or public telephone directory of agency employees contains PII but is not sensitive.</p>
+
+            </div>
+        </div>
+    </div>
+  </div>
+</body>
+</html>
