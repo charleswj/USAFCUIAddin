@@ -1,0 +1,664 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--Created:cb85b80c-f585-40ff-8bfc-12ff4d0e34a9-->
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides"
+  xsi:type="MailApp">
+  <Id>5a88a12b-d447-428e-96e1-cd72aa849160</Id>
+  <Version>1.0.1.0</Version>
+  <ProviderName>USAF</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="DoD Markings V1.0.1" />
+  <Description DefaultValue="Adds CUI/PII Labeling"/>
+  <IconUrl DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/blue-64.png" />
+  <HighResolutionIconUrl DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/blue-80.png" />
+  
+  <Hosts>
+    <Host Name="Mailbox" />
+  </Hosts>
+	
+  <Requirements>
+    <Sets>
+      <Set Name="MailBox" MinVersion="1.1" />
+    </Sets>
+  </Requirements>
+	
+   <!--These elements support older clients that don't support add-in commands--> 
+  <FormSettings>
+     <!--NOTE: Just reusing the read taskpane page that is invoked by the button
+             on the ribbon in clients that support add-in commands. You can
+             use a completely different page if desired--> 
+    <Form xsi:type="ItemEdit">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn"/>
+      </DesktopSettings>
+    </Form>
+  </FormSettings>
+	
+  <Permissions>ReadWriteMailbox</Permissions>
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Edit" />
+    <Rule xsi:type="ItemIs" ItemType="Appointment" FormType="Edit" />
+	<Rule xsi:type="ItemIs" ItemType="Message" FormType="Read" />
+	<Rule xsi:type="ItemIs" ItemType="Appointment" FormType="Read" />
+  </Rule>
+  <DisableEntityHighlighting>false</DisableEntityHighlighting>
+
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
+
+    <Requirements>
+      <bt:Sets DefaultMinVersion="1.3">
+        <bt:Set Name="Mailbox" />
+      </bt:Sets>
+    </Requirements>
+	  
+    <Hosts>
+      <Host xsi:type="MailHost">
+
+        <DesktopFormFactor>
+          <FunctionFile resid="functionFile" />
+
+          <!-- Message compose form -->
+          <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+            <OfficeTab id="TabDefault">
+              <Group id="msgDoDMarkingGroup">
+                <Label resid="groupLabel" />
+                <!-- Function (UI-less) button -->
+                <Control xsi:type="Button" id="msgAddCUI">
+                  <Label resid="funcCUIButtonLabel" />
+                  <Supertip>
+                    <Title resid="funcCUISuperTipTitle" />
+                    <Description resid="funcCUISuperTipDescription" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="blue-icon-16" />
+                    <bt:Image size="32" resid="blue-icon-32" />
+                    <bt:Image size="80" resid="blue-icon-80" />
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>addCUILabel</FunctionName>
+                  </Action>
+                </Control>
+				<Control xsi:type="Button" id="msgAddPII">
+                  <Label resid="funcPIIButtonLabel" />
+                  <Supertip>
+                    <Title resid="funcPIISuperTipTitle" />
+                    <Description resid="funcPIISuperTipDescription" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="red-icon-16" />
+                    <bt:Image size="32" resid="red-icon-32" />
+                    <bt:Image size="80" resid="red-icon-80" />
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>addPIILabel</FunctionName>
+                  </Action>
+                </Control>  
+                 <!--Menu (dropdown) button 
+                <Control xsi:type="Menu" id="msgComposeMenuButton">
+                  <Label resid="menuComposeButtonLabel" />
+                  <Supertip>
+                    <Title resid="menuComposeSuperTipTitle" />
+                    <Description resid="menuComposeSuperTipDescription" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="red-icon-16" />
+                    <bt:Image size="32" resid="red-icon-32" />
+                    <bt:Image size="80" resid="red-icon-80" />
+                  </Icon>
+                  <Items>
+                    <Item id="msgComposeMenuItem1">
+                      <Label resid="menuItem1ComposeLabel" />
+                      <Supertip>
+                        <Title resid="menuItem1ComposeLabel" />
+                        <Description resid="menuItem1ComposeTip" />
+                      </Supertip>
+                      <Icon>
+                        <bt:Image size="16" resid="red-icon-16" />
+                        <bt:Image size="32" resid="red-icon-32" />
+                        <bt:Image size="80" resid="red-icon-80" />
+                      </Icon>
+                      <Action xsi:type="ExecuteFunction">
+                        <FunctionName>addMsg1ToBody</FunctionName>
+                      </Action>
+                    </Item>
+                    <Item id="msgComposeMenuItem2">
+                      <Label resid="menuItem2ComposeLabel" />
+                      <Supertip>
+                        <Title resid="menuItem2ComposeLabel" />
+                        <Description resid="menuItem2ComposeTip" />
+                      </Supertip>
+                      <Icon>
+                        <bt:Image size="16" resid="red-icon-16" />
+                        <bt:Image size="32" resid="red-icon-32" />
+                        <bt:Image size="80" resid="red-icon-80" />
+                      </Icon>
+                      <Action xsi:type="ExecuteFunction">
+                        <FunctionName>addMsg2ToBody</FunctionName>
+                      </Action>
+                    </Item>
+                    <Item id="msgComposeMenuItem3">
+                      <Label resid="menuItem3ComposeLabel" />
+                      <Supertip>
+                        <Title resid="menuItem3ComposeLabel" />
+                        <Description resid="menuItem3ComposeTip" />
+                      </Supertip>
+                      <Icon>
+                        <bt:Image size="16" resid="red-icon-16" />
+                        <bt:Image size="32" resid="red-icon-32" />
+                        <bt:Image size="80" resid="red-icon-80" />
+                      </Icon>
+                      <Action xsi:type="ExecuteFunction">
+                        <FunctionName>addMsg3ToBody</FunctionName>
+                      </Action>
+                    </Item>
+                  </Items>
+                </Control>-->
+                <!-- Task pane button -->
+                <Control xsi:type="Button" id="msgInstrOpenPaneButton">
+                  <Label resid="paneInstrButtonLabel" />
+                  <Supertip>
+                    <Title resid="paneInstrSuperTipTitle" />
+                    <Description resid="paneInstrSuperTipDescription" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="green-icon-16" />
+                    <bt:Image size="32" resid="green-icon-32" />
+                    <bt:Image size="80" resid="green-icon-80" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="composeTaskPaneUrl" />
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+
+          <!-- Appointment compose form -->
+          <ExtensionPoint xsi:type="AppointmentOrganizerCommandSurface">
+            <OfficeTab id="TabDefault">
+              <Group id="apptComposeDemoGroup">
+                <Label resid="groupLabel" />
+                <!-- Function (UI-less) button -->
+                <Control xsi:type="Button" id="apptCUIFunctionButton">
+                  <Label resid="funcCUIButtonLabel" />
+                  <Supertip>
+                    <Title resid="funcCUISuperTipTitle" />
+                    <Description resid="funcCUISuperTipDescription" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="blue-icon-16" />
+                    <bt:Image size="32" resid="blue-icon-32" />
+                    <bt:Image size="80" resid="blue-icon-80" />
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>addCUILabel</FunctionName>
+                  </Action>
+                </Control>
+                <Control xsi:type="Button" id="apptPIIFunctionButton">
+                    <Label resid="funcPIIButtonLabel" />
+                    <Supertip>
+                        <Title resid="funcPIISuperTipTitle" />
+                        <Description resid="funcPIISuperTipDescription" />
+                    </Supertip>
+                    <Icon>
+                        <bt:Image size="16" resid="blue-icon-16" />
+                        <bt:Image size="32" resid="blue-icon-32" />
+                        <bt:Image size="80" resid="blue-icon-80" />
+                    </Icon>
+                    <Action xsi:type="ExecuteFunction">
+                        <FunctionName>addPIILabel</FunctionName>
+                    </Action>
+                </Control>
+                 <!--Menu (dropdown) button 
+                <Control xsi:type="Menu" id="apptComposeMenuButton">
+                  <Label resid="menuComposeButtonLabel" />
+                  <Supertip>
+                    <Title resid="menuComposeSuperTipTitle" />
+                    <Description resid="menuComposeSuperTipDescription" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="red-icon-16" />
+                    <bt:Image size="32" resid="red-icon-32" />
+                    <bt:Image size="80" resid="red-icon-80" />
+                  </Icon>
+                  <Items>
+                    <Item id="apptComposeMenuItem1">
+                      <Label resid="menuItem1ComposeLabel" />
+                      <Supertip>
+                        <Title resid="menuItem1ComposeLabel" />
+                        <Description resid="menuItem1ComposeTip" />
+                      </Supertip>
+                      <Icon>
+                        <bt:Image size="16" resid="red-icon-16" />
+                        <bt:Image size="32" resid="red-icon-32" />
+                        <bt:Image size="80" resid="red-icon-80" />
+                      </Icon>
+                      <Action xsi:type="ExecuteFunction">
+                        <FunctionName>addMsg1ToBody</FunctionName>
+                      </Action>
+                    </Item>
+                    <Item id="apptComposeMenuItem2">
+                      <Label resid="menuItem2ComposeLabel" />
+                      <Supertip>
+                        <Title resid="menuItem2ComposeLabel" />
+                        <Description resid="menuItem2ComposeTip" />
+                      </Supertip>
+                      <Icon>
+                        <bt:Image size="16" resid="red-icon-16" />
+                        <bt:Image size="32" resid="red-icon-32" />
+                        <bt:Image size="80" resid="red-icon-80" />
+                      </Icon>
+                      <Action xsi:type="ExecuteFunction">
+                        <FunctionName>addMsg2ToBody</FunctionName>
+                      </Action>
+                    </Item>
+                    <Item id="apptComposeMenuItem3">
+                      <Label resid="menuItem3ComposeLabel" />
+                      <Supertip>
+                        <Title resid="menuItem3ComposeLabel" />
+                        <Description resid="menuItem3ComposeTip" />
+                      </Supertip>
+                      <Icon>
+                        <bt:Image size="16" resid="red-icon-16" />
+                        <bt:Image size="32" resid="red-icon-32" />
+                        <bt:Image size="80" resid="red-icon-80" />
+                      </Icon>
+                      <Action xsi:type="ExecuteFunction">
+                        <FunctionName>addMsg3ToBody</FunctionName>
+                      </Action>
+                    </Item>
+                  </Items>
+                </Control>-->
+                <!-- Task pane button -->
+                <Control xsi:type="Button" id="apptInstrOpenPaneButton">
+                  <Label resid="paneInstrButtonLabel" />
+                  <Supertip>
+                    <Title resid="paneInstrSuperTipTitle" />
+                    <Description resid="paneInstrSuperTipDescription" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="green-icon-16" />
+                    <bt:Image size="32" resid="green-icon-32" />
+                    <bt:Image size="80" resid="green-icon-80" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="composeTaskPaneUrl" />
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+
+    <Resources>
+      <bt:Images>
+        <!-- Blue icon -->
+        <bt:Image id="blue-icon-16" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/blue-16.png"/>
+        <bt:Image id="blue-icon-32" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/blue-32.png"/>
+        <bt:Image id="blue-icon-80" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/blue-80.png"/>
+        <!-- Red icon -->
+        <bt:Image id="red-icon-16" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/red-16.png"/>
+        <bt:Image id="red-icon-32" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/red-32.png"/>
+        <bt:Image id="red-icon-80" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/red-80.png"/>
+        <!-- Green icon -->
+        <bt:Image id="green-icon-16" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/green-16.png"/>
+        <bt:Image id="green-icon-32" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/green-32.png"/>
+        <bt:Image id="green-icon-80" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/green-80.png"/>
+		<!--DoD Seal-->
+		<bt:Image id="DoD-Seal" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/assets/United_States_Department_of_Defense_Seal.png"/>
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="functionFile" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/FunctionFile/Functions.html"/>
+        <bt:Url id="composeTaskPaneUrl" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/InsertTextPane/InsertText.html"/>
+		<!-- Entry needed for Outlook Desktop. -->
+		<!--<bt:Url id="JSRuntime.Url" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/src/FunctionsFile/Functions.js" />
+		<bt:Url id="JSRuntime.Url" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/src/InsertTextPane/InsertText.js" />-->
+	  </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="groupLabel" DefaultValue="Instructions"/>
+        <!-- Compose mode -->
+        <bt:String id="funcCUIButtonLabel" DefaultValue="CUI Marking"/>
+		<bt:String id="funcPIIButtonLabel" DefaultValue="PII Marking"/>
+		  <!--<bt:String id="menuComposeButtonLabel" DefaultValue="Other Markings"/>-->
+        <bt:String id="paneInstrButtonLabel" DefaultValue="Instructions"/>
+
+        <bt:String id="funcCUISuperTipTitle" DefaultValue="CUI Marking"/>
+		<bt:String id="funcPIISuperTipTitle" DefaultValue="PII Marking"/>
+        <!--<bt:String id="menuComposeSuperTipTitle" DefaultValue="Marking Menu"/>-->
+        <bt:String id="paneInstrSuperTipTitle" DefaultValue="Instructions for Marking"/>
+
+        <!--<bt:String id="menuItem1ComposeLabel" DefaultValue="CUI Marking"/>
+        <bt:String id="menuItem2ComposeLabel" DefaultValue="PII Marking"/>
+        <bt:String id="menuItem3ComposeLabel" DefaultValue="PHI Marking"/>-->
+
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <!-- Compose mode -->
+        <bt:String id="funcCUISuperTipDescription" DefaultValue="Inserts CUI Marking into the body of the message. User still required to fill out CUI Box."/>
+		<bt:String id="funcPIISuperTipDescription" DefaultValue="Inserts PII Marking into the body of the message. User still required to fill out CUI Box."/>
+        <!--<bt:String id="menuComposeSuperTipDescription" DefaultValue="Inserts PII/PHI Markings into the body of the message."/>-->
+        <bt:String id="paneInstrSuperTipDescription" DefaultValue="Opens a pane where instructions are given on DoD markings"/>
+
+        <!--<bt:String id="menuItem1ComposeTip" DefaultValue="Inserts PII Marking into the body of the message." />
+        <bt:String id="menuItem2ComposeTip" DefaultValue="Inserts PHI Marking into the body of the message." />
+        <bt:String id="menuItem3ComposeTip" DefaultValue="Inserts Visit Outlook Dev Center into the body of the message or appointment." />-->
+
+      </bt:LongStrings>
+    </Resources>
+
+    <!-- VersionOverrides for the v1.1 schema -->
+    <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
+
+      <Requirements>
+        <bt:Sets DefaultMinVersion="1.3">
+          <bt:Set Name="Mailbox" />
+        </bt:Sets>
+      </Requirements>
+      <Hosts>
+        <Host xsi:type="MailHost">
+
+          <DesktopFormFactor>
+            <FunctionFile resid="functionFile" />
+
+            <!-- Message compose form -->
+            <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+              <OfficeTab id="TabDefault">
+                <Group id="msgDoDMarkingGroup">
+                  <Label resid="groupLabel" />
+                  <!-- Function (UI-less) button -->
+                  <Control xsi:type="Button" id="msgCUIFunctionButton">
+                    <Label resid="funcCUIButtonLabel" />
+                    <Supertip>
+                      <Title resid="funcCUISuperTipTitle" />
+                      <Description resid="funcCUISuperTipDescription" />
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="blue-icon-16" />
+                      <bt:Image size="32" resid="blue-icon-32" />
+                      <bt:Image size="80" resid="blue-icon-80" />
+                    </Icon>
+                    <Action xsi:type="ExecuteFunction">
+                      <FunctionName>addCUILabel</FunctionName>
+                    </Action>
+                  </Control>
+				    <Control xsi:type="Button" id="msgPIIeFunctionButton">
+					    <Label resid="funcPIIButtonLabel" />
+					    <Supertip>
+						    <Title resid="funcPIISuperTipTitle" />
+						    <Description resid="funcPIISuperTipDescription" />
+					    </Supertip>
+					    <Icon>
+						    <bt:Image size="16" resid="red-icon-16" />
+						    <bt:Image size="32" resid="red-icon-32" />
+						    <bt:Image size="80" resid="red-icon-80" />
+					    </Icon>
+					    <Action xsi:type="ExecuteFunction">
+						    <FunctionName>addPIILabel</FunctionName>
+					    </Action>
+				    </Control>
+                   <!--Menu (dropdown) button 
+                  <Control xsi:type="Menu" id="msgComposeMenuButton">
+                    <Label resid="menuComposeButtonLabel" />
+                    <Supertip>
+                      <Title resid="menuComposeSuperTipTitle" />
+                      <Description resid="menuComposeSuperTipDescription" />
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="red-icon-16" />
+                      <bt:Image size="32" resid="red-icon-32" />
+                      <bt:Image size="80" resid="red-icon-80" />
+                    </Icon>
+                    <Items>
+                      <Item id="msgComposeMenuItem1">
+                        <Label resid="menuItem1ComposeLabel" />
+                        <Supertip>
+                          <Title resid="menuItem1ComposeLabel" />
+                          <Description resid="menuItem1ComposeTip" />
+                        </Supertip>
+                        <Icon>
+                          <bt:Image size="16" resid="red-icon-16" />
+                          <bt:Image size="32" resid="red-icon-32" />
+                          <bt:Image size="80" resid="red-icon-80" />
+                        </Icon>
+                        <Action xsi:type="ExecuteFunction">
+                          <FunctionName>addMsg1ToBody</FunctionName>
+                        </Action>
+                      </Item>
+                      <Item id="msgComposeMenuItem2">
+                        <Label resid="menuItem2ComposeLabel" />
+                        <Supertip>
+                          <Title resid="menuItem2ComposeLabel" />
+                          <Description resid="menuItem2ComposeTip" />
+                        </Supertip>
+                        <Icon>
+                          <bt:Image size="16" resid="red-icon-16" />
+                          <bt:Image size="32" resid="red-icon-32" />
+                          <bt:Image size="80" resid="red-icon-80" />
+                        </Icon>
+                        <Action xsi:type="ExecuteFunction">
+                          <FunctionName>addMsg2ToBody</FunctionName>
+                        </Action>
+                      </Item>
+                      <Item id="msgComposeMenuItem3">
+                        <Label resid="menuItem3ComposeLabel" />
+                        <Supertip>
+                          <Title resid="menuItem3ComposeLabel" />
+                          <Description resid="menuItem3ComposeTip" />
+                        </Supertip>
+                        <Icon>
+                          <bt:Image size="16" resid="red-icon-16" />
+                          <bt:Image size="32" resid="red-icon-32" />
+                          <bt:Image size="80" resid="red-icon-80" />
+                        </Icon>
+                        <Action xsi:type="ExecuteFunction">
+                          <FunctionName>addMsg3ToBody</FunctionName>
+                        </Action>
+                      </Item>
+                    </Items>
+                  </Control>-->
+                  <!-- Task pane button -->
+                  <Control xsi:type="Button" id="msgInstrOpenPaneButton">
+                    <Label resid="paneInstrButtonLabel" />
+                    <Supertip>
+                      <Title resid="paneInstrSuperTipTitle" />
+                      <Description resid="paneInstrSuperTipDescription" />
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="green-icon-16" />
+                      <bt:Image size="32" resid="green-icon-32" />
+                      <bt:Image size="80" resid="green-icon-80" />
+                    </Icon>
+                    <Action xsi:type="ShowTaskpane">
+                      <SourceLocation resid="composeTaskPaneUrl" />
+                    </Action>
+                  </Control>
+                </Group>
+              </OfficeTab>
+            </ExtensionPoint>
+
+            <!-- Appointment compose form -->
+            <ExtensionPoint xsi:type="AppointmentOrganizerCommandSurface">
+              <OfficeTab id="TabDefault">
+                <Group id="apptDoDMarkingGroup">
+                  <Label resid="groupLabel" />
+                  <!-- Function (UI-less) button -->
+                  <Control xsi:type="Button" id="apptCUIFunctionButton">
+                    <Label resid="funcCUIButtonLabel" />
+                    <Supertip>
+                      <Title resid="funcCUISuperTipTitle" />
+                      <Description resid="funcCUISuperTipDescription" />
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="blue-icon-16" />
+                      <bt:Image size="32" resid="blue-icon-32" />
+                      <bt:Image size="80" resid="blue-icon-80" />
+                    </Icon>
+                    <Action xsi:type="ExecuteFunction">
+                      <FunctionName>addCUILabel</FunctionName>
+                    </Action>
+                  </Control>
+					<Control xsi:type="Button" id="apptPIIFunctionButton">
+						<Label resid="funcPIIButtonLabel" />
+						<Supertip>
+							<Title resid="funcPIISuperTipTitle" />
+							<Description resid="funcPIISuperTipDescription" />
+						</Supertip>
+						<Icon>
+							<bt:Image size="16" resid="red-icon-16" />
+							<bt:Image size="32" resid="red-icon-32" />
+							<bt:Image size="80" resid="red-icon-80" />
+						</Icon>
+						<Action xsi:type="ExecuteFunction">
+							<FunctionName>addPIILabel</FunctionName>
+						</Action>
+					</Control>
+                   <!--Menu (dropdown) button 
+                  <Control xsi:type="Menu" id="apptComposeMenuButton">
+                    <Label resid="menuComposeButtonLabel" />
+                    <Supertip>
+                      <Title resid="menuComposeSuperTipTitle" />
+                      <Description resid="menuComposeSuperTipDescription" />
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="red-icon-16" />
+                      <bt:Image size="32" resid="red-icon-32" />
+                      <bt:Image size="80" resid="red-icon-80" />
+                    </Icon>
+                    <Items>
+                      <Item id="apptComposeMenuItem1">
+                        <Label resid="menuItem1ComposeLabel" />
+                        <Supertip>
+                          <Title resid="menuItem1ComposeLabel" />
+                          <Description resid="menuItem1ComposeTip" />
+                        </Supertip>
+                        <Icon>
+                          <bt:Image size="16" resid="red-icon-16" />
+                          <bt:Image size="32" resid="red-icon-32" />
+                          <bt:Image size="80" resid="red-icon-80" />
+                        </Icon>
+                        <Action xsi:type="ExecuteFunction">
+                          <FunctionName>addMsg1ToBody</FunctionName>
+                        </Action>
+                      </Item>
+                      <Item id="apptComposeMenuItem2">
+                        <Label resid="menuItem2ComposeLabel" />
+                        <Supertip>
+                          <Title resid="menuItem2ComposeLabel" />
+                          <Description resid="menuItem2ComposeTip" />
+                        </Supertip>
+                        <Icon>
+                          <bt:Image size="16" resid="red-icon-16" />
+                          <bt:Image size="32" resid="red-icon-32" />
+                          <bt:Image size="80" resid="red-icon-80" />
+                        </Icon>
+                        <Action xsi:type="ExecuteFunction">
+                          <FunctionName>addMsg2ToBody</FunctionName>
+                        </Action>
+                      </Item>
+                      <Item id="apptComposeMenuItem3">
+                        <Label resid="menuItem3ComposeLabel" />
+                        <Supertip>
+                          <Title resid="menuItem3ComposeLabel" />
+                          <Description resid="menuItem3ComposeTip" />
+                        </Supertip>
+                        <Icon>
+                          <bt:Image size="16" resid="red-icon-16" />
+                          <bt:Image size="32" resid="red-icon-32" />
+                          <bt:Image size="80" resid="red-icon-80" />
+                        </Icon>
+                        <Action xsi:type="ExecuteFunction">
+                          <FunctionName>addMsg3ToBody</FunctionName>
+                        </Action>
+                      </Item>
+                    </Items>
+                  </Control>-->
+                  <!-- Task pane button -->
+                  <Control xsi:type="Button" id="apptInstrOpenPaneButton">
+                    <Label resid="paneInstrButtonLabel" />
+                    <Supertip>
+                      <Title resid="paneInstrSuperTipTitle" />
+                      <Description resid="paneInstrSuperTipDescription" />
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="green-icon-16" />
+                      <bt:Image size="32" resid="green-icon-32" />
+                      <bt:Image size="80" resid="green-icon-80" />
+                    </Icon>
+                    <Action xsi:type="ShowTaskpane">
+                      <SourceLocation resid="composeTaskPaneUrl" />
+                    </Action>
+                  </Control>
+                </Group>
+              </OfficeTab>
+            </ExtensionPoint>
+          </DesktopFormFactor>
+        </Host>
+      </Hosts>
+
+      <Resources>
+		  
+        <bt:Images>
+          <!-- Blue icon -->
+          <bt:Image id="blue-icon-16" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/blue-16.png"/>
+          <bt:Image id="blue-icon-32" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/blue-32.png"/>
+          <bt:Image id="blue-icon-80" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/blue-80.png"/>
+          <!-- Red icon -->
+          <bt:Image id="red-icon-16" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/red-16.png"/>
+          <bt:Image id="red-icon-32" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/red-32.png"/>
+          <bt:Image id="red-icon-80" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/red-80.png"/>
+          <!-- Green icon -->
+          <bt:Image id="green-icon-16" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/green-16.png"/>
+          <bt:Image id="green-icon-32" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/green-32.png"/>
+          <bt:Image id="green-icon-80" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/Assets/Images/green-80.png"/>
+		  <!--DoD Seal-->
+		  <bt:Image id="DoD-Seal" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/assets/United_States_Department_of_Defense_Seal.png"/>
+        </bt:Images>
+		  
+        <bt:Urls>
+          <bt:Url id="functionFile" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/FunctionFile/Functions.html"/>
+          <bt:Url id="composeTaskPaneUrl" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/InsertTextPane/InsertText.html"/>
+		  <!-- Entry needed for Outlook Desktop. --><!--
+		  <bt:Url id="JSRuntime.Url" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/src/FunctionsFile/Functions.js" />
+		  <bt:Url id="JSRuntime.Url" DefaultValue="https://cep2.mail.us.af.mil/CUI_ADDIn/src/InsertTextPane/InsertText.js" />-->
+		</bt:Urls>
+		  
+        <bt:ShortStrings>
+        <bt:String id="groupLabel" DefaultValue="DoD Markings"/>
+        <!-- Compose mode -->
+            <bt:String id="funcCUIButtonLabel" DefaultValue="CUI Marking"/>
+		    <bt:String id="funcPIIButtonLabel" DefaultValue="PII Marking"/>
+		      <!--<bt:String id="menuComposeButtonLabel" DefaultValue="Other Markings"/>-->
+            <bt:String id="paneInstrButtonLabel" DefaultValue="Instructions"/>
+
+            <bt:String id="funcCUISuperTipTitle" DefaultValue="CUI Marking"/>
+		    <bt:String id="funcPIISuperTipTitle" DefaultValue="PII Marking"/>
+            <!--<bt:String id="menuComposeSuperTipTitle" DefaultValue="Marking Menu"/>-->
+            <bt:String id="paneInstrSuperTipTitle" DefaultValue="Instructions for Marking"/>
+
+            <!--<bt:String id="menuItem1ComposeLabel" DefaultValue="CUI Marking"/>
+            <bt:String id="menuItem2ComposeLabel" DefaultValue="PII Marking"/>
+            <bt:String id="menuItem3ComposeLabel" DefaultValue="PHI Marking"/>-->
+      </bt:ShortStrings>
+		  
+      <bt:LongStrings>
+            <!-- Compose mode -->
+            <bt:String id="funcCUISuperTipDescription" DefaultValue="Inserts CUI Marking into the body of the message. User still required to fill out CUI Box."/>
+		    <bt:String id="funcPIISuperTipDescription" DefaultValue="Inserts PII Marking into the body of the message. User still required to fill out CUI Box."/>
+            <!--<bt:String id="menuComposeSuperTipDescription" DefaultValue="Inserts PII/PHI Markings into the body of the message."/>-->
+            <bt:String id="paneInstrSuperTipDescription" DefaultValue="Opens a pane where instructions are given on DoD markings"/>
+
+            <!--<bt:String id="menuItem1ComposeTip" DefaultValue="Inserts PII Marking into the body of the message." />
+            <bt:String id="menuItem2ComposeTip" DefaultValue="Inserts PHI Marking into the body of the message." />
+            <bt:String id="menuItem3ComposeTip" DefaultValue="Inserts Visit Outlook Dev Center into the body of the message or appointment." />-->
+      </bt:LongStrings>
+		  
+      </Resources>
+    </VersionOverrides>
+  </VersionOverrides>
+</OfficeApp>
